@@ -1,6 +1,7 @@
+import { UpdateRentalSlipDto } from './../dtos/rentalSlip_dtos/update-rentalSlip.dto';
 import { RoomService } from './room.service';
 import { CreateRentalSlipDto } from './../dtos/rentalSlip_dtos/create-rentalSlip.dto';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RentalSlip, RentalSlipDocument } from '../schemas';
 import { Model } from 'mongoose';
@@ -17,11 +18,6 @@ export class RentalSlipService {
     createRentalSlipDto: CreateRentalSlipDto,
   ): Promise<RentalSlipDocument> {
     try {
-      console.log(createRentalSlipDto);
-      if (!createRentalSlipDto || !createRentalSlipDto.rooms) {
-        throw new BadRequestException('Invalid createRentalSlipDto');
-      }
-
       const totalAmount = await this.roomService.totalAmount(
         createRentalSlipDto.rooms,
       );
@@ -41,5 +37,29 @@ export class RentalSlipService {
     } catch (error) {
       throw new Error(error.message);
     }
+  }
+
+  async findAll(): Promise<RentalSlipDocument[]> {
+    return this.rentalSlipModel.find().exec();
+  }
+
+  async findById(id: string): Promise<RentalSlipDocument> {
+    return this.rentalSlipModel.findById({ _id: id }).exec();
+  }
+
+  async update(
+    id: string,
+    updateRentalSlipDto: UpdateRentalSlipDto,
+  ): Promise<RentalSlipDocument | null> {
+    return this.rentalSlipModel.findOneAndUpdate(
+      { _id: id },
+      updateRentalSlipDto,
+      {
+        new: true,
+      },
+    );
+  }
+  async delete(id: string): Promise<RentalSlipDocument | boolean> {
+    return this.rentalSlipModel.findByIdAndDelete({ _id: id });
   }
 }

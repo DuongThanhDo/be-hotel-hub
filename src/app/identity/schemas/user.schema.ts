@@ -32,7 +32,11 @@ export class User {
   @Prop({ default: Date.now })
   updatedAt?: Date;
 
-  @Prop({ required: true, enum: ['admin', 'staff', 'client'], immutable: true })
+  @Prop({
+    required: true,
+    enum: ['admin', 'staff', 'customer'],
+    immutable: true,
+  })
   role: string;
 }
 
