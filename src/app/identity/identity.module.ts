@@ -1,15 +1,27 @@
 import { Module } from '@nestjs/common';
-import { RoomController, UserController } from './http';
-import { RoomService, UserService } from './services';
+import { rentalSlipController, RoomController, UserController } from './http';
+import { RentalSlipService, RoomService, UserService } from './services';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Room, RoomSchema, User, UserSchema } from './schemas';
+import {
+  RentalSlip,
+  rentalSlipSchema,
+  Room,
+  RoomSchema,
+  User,
+  UserSchema,
+} from './schemas';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Room.name, schema: RoomSchema }]),
+    MongooseModule.forFeature([
+      { name: RentalSlip.name, schema: rentalSlipSchema },
+    ]),
   ],
-  controllers: [UserController, RoomController],
-  providers: [UserService, RoomService],
+  controllers: [UserController, RoomController, rentalSlipController],
+  providers: [UserService, RoomService, RentalSlipService],
+
+  exports: [UserService],
 })
 export class IdentityModule {}

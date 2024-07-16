@@ -48,4 +48,17 @@ export class RoomService {
 
     return true;
   }
+
+  async totalAmount(rooms: string[]): Promise<number> {
+    let totalAmount = 0;
+    for (const roomNumber of rooms) {
+      const room = await this.findByRoomNumber(roomNumber);
+
+      if (room && room.price) {
+        totalAmount += room.price;
+      }
+    }
+
+    return totalAmount;
+  }
 }
