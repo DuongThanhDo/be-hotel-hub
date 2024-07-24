@@ -1,19 +1,30 @@
-import { Controller, Get, Post, Put, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { BookingService } from '../../services';
 import { CreateBookingDto } from '../../dtos/creates';
 import { UpdateBookingDto } from '../../dtos/updates';
 
-@Controller('rooms')
+@Controller('bookings')
 export class BookingController {
   constructor(private bookingService: BookingService) {}
 
   @Post()
   create(
-    @Body() createBookingDto: CreateBookingDto,
-    @Body() customer_id: string,
-    @Body() rooms_id: [room_id: string],
+    @Body()
+    body: {
+      createBookingDto: CreateBookingDto;
+      customer_id: string;
+      rooms_id: [room_id: string];
+    },
   ) {
-    return this.bookingService.create(createBookingDto, customer_id, rooms_id);
+    return this.bookingService.create(body);
   }
 
   @Get()
@@ -31,7 +42,7 @@ export class BookingController {
     return this.bookingService.update(id, updateBookingDto);
   }
 
-  @Post(':id')
+  @Delete(':id')
   delete(@Param('id') id: string) {
     return this.bookingService.delete(id);
   }

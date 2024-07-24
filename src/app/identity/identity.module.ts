@@ -11,6 +11,7 @@ import {
 } from './entities';
 import { AuthModule } from '../auth/auth.module';
 import {
+  BookingController,
   CustomerController,
   ProfileController,
   RoomController,
@@ -18,6 +19,7 @@ import {
   UserController,
 } from './http';
 import {
+  BookingService,
   CustomerService,
   ProfileService,
   RoomService,
@@ -44,6 +46,7 @@ import {
     StaffController,
     ProfileController,
     RoomController,
+    BookingController,
   ],
   providers: [
     UserService,
@@ -51,6 +54,7 @@ import {
     ProfileService,
     StaffService,
     RoomService,
+    BookingService,
   ],
   exports: [UserService],
 })

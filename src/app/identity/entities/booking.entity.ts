@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -19,16 +18,16 @@ export class BookingEntity {
   @ManyToOne(() => CustomerEntity, (customer) => customer.bookings)
   customer: CustomerEntity;
 
-  @ManyToMany(() => RoomEntity, (room) => room.bookings)
+  @OneToMany(() => RoomEntity, (room) => room.booking)
   rooms: RoomEntity[];
 
   @OneToMany(() => PaymentEntity, (payment) => payment.booking)
   payments: PaymentEntity[];
 
-  @Column()
+  @Column({ type: 'date', default: null })
   check_in: Date;
 
-  @Column()
+  @Column({ type: 'date', default: null })
   check_out: Date;
 
   @Column({ type: 'enum', enum: StatusBooking, default: StatusBooking.pending })

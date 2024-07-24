@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { BookingEntity } from './booking.entity';
 import { StatusRoom } from 'src/common/constants/enum';
 
@@ -29,6 +29,6 @@ export class RoomEntity {
   })
   update_at: Date;
 
-  @ManyToMany(() => BookingEntity, (booking) => booking.rooms)
-  bookings: BookingEntity[];
+  @ManyToOne(() => BookingEntity, (booking) => booking.rooms)
+  booking: BookingEntity;
 }
