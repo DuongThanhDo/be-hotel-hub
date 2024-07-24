@@ -1,27 +1,57 @@
-import { Module } from '@nestjs/common';
-import { rentalSlipController, RoomController, UserController } from './http';
-import { RentalSlipService, RoomService, UserService } from './services';
-import { MongooseModule } from '@nestjs/mongoose';
+import { forwardRef, Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  RentalSlip,
-  rentalSlipSchema,
-  Room,
-  RoomSchema,
-  User,
-  UserSchema,
-} from './schemas';
+  BookingEntity,
+  CustomerEntity,
+  PaymentEntity,
+  ProfileEntity,
+  RoomEntity,
+  StaffEntity,
+  UserEntity,
+} from './entities';
+import { AuthModule } from '../auth/auth.module';
+import {
+  CustomerController,
+  ProfileController,
+  RoomController,
+  StaffController,
+  UserController,
+} from './http';
+import {
+  CustomerService,
+  ProfileService,
+  RoomService,
+  StaffService,
+  UserService,
+} from './services';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    MongooseModule.forFeature([{ name: Room.name, schema: RoomSchema }]),
-    MongooseModule.forFeature([
-      { name: RentalSlip.name, schema: rentalSlipSchema },
+    TypeOrmModule.forFeature([
+      CustomerEntity,
+      UserEntity,
+      StaffEntity,
+      RoomEntity,
+      BookingEntity,
+      PaymentEntity,
+      ProfileEntity,
     ]),
+    forwardRef(() => AuthModule),
   ],
-  controllers: [UserController, RoomController, rentalSlipController],
-  providers: [UserService, RoomService, RentalSlipService],
-
+  controllers: [
+    UserController,
+    CustomerController,
+    StaffController,
+    ProfileController,
+    RoomController,
+  ],
+  providers: [
+    UserService,
+    CustomerService,
+    ProfileService,
+    StaffService,
+    RoomService,
+  ],
   exports: [UserService],
 })
 export class IdentityModule {}

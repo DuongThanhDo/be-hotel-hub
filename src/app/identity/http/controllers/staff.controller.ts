@@ -1,0 +1,33 @@
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { ExistingUserDto } from '../../dtos/existing-user.dto';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Role } from 'src/common/constants/enum';
+import { StaffService } from '../../services';
+
+@Controller('staffs')
+export class StaffController {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly staffService: StaffService,
+  ) {}
+
+  @Post('login')
+  login(@Body() existingUserDto: ExistingUserDto) {
+    return this.authService.login(existingUserDto, Role.staff);
+  }
+
+  @Get()
+  findAll() {
+    return this.staffService.findAll();
+  }
+
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.staffService.findById(id);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() position: string) {
+    return this.staffService.update(id, position);
+  }
+}

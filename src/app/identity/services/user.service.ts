@@ -1,67 +1,99 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User, UserDocument } from '../schemas';
-import { UserDetails } from '../interfaces';
-import { CreateUserDto, UpdateUserDto } from '../dtos/user_dtos';
+import { CreateUserDto } from './../dtos/creates/user-create.dto';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import {
+  CustomerEntity,
+  ProfileEntity,
+  StaffEntity,
+  UserEntity,
+} from '../entities';
+import { Repository } from 'typeorm';
+import { Role } from 'src/common/constants/enum';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
+    @InjectRepository(CustomerEntity)
+    private customerRepository: Repository<CustomerEntity>,
+    @InjectRepository(StaffEntity)
+    private staffRepository: Repository<StaffEntity>,
+    @InjectRepository(ProfileEntity)
+    private profileRepository: Repository<ProfileEntity>,
   ) {}
 
-  _getUserDetails(user: UserDocument): UserDetails {
-    return {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    };
+  async findAll(): Promise<UserEntity[]> {
+    const users = await this.userRepository.find({
+      relations: ['customer', 'staff', 'profile'],
+    });
+
+    return users;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<UserDocument | boolean> {
-    if (createUserDto.role === 'admin') {
-      const admin = await this.findByRole('admin');
-      console.log(admin);
+  async findById(id: string): Promise<UserEntity> {
+    return this.userRepository.findOne({
+      where: { user_id: id },
+      relations: ['customer', 'staff', 'profile'],
+    });
+  }
 
-      if (!!admin) throw new ConflictException('Da co admin');
+  async findByEmail(email: string): Promise<UserEntity> {
+    return this.userRepository.findOne({ where: { email: email } });
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    try {
+      const {
+        user_name,
+        password,
+        email,
+        dob,
+        position,
+        role,
+        name,
+        phone,
+        address,
+      } = createUserDto;
+
+      const newUser = await this.userRepository.save({
+        user_name,
+        password,
+        email,
+        role,
+      });
+
+      if (role === Role.staff) {
+        await this.staffRepository.save({
+          position: position || '',
+          user: newUser,
+        });
+      } else {
+        await this.customerRepository.save({
+          dob: dob || new Date('1900-01-01'),
+          user: newUser,
+        });
+      }
+
+      await this.profileRepository.save({
+        name,
+        phone,
+        address,
+        user: newUser,
+      });
+
+      return newUser;
+    } catch (error) {
+      new Error(error);
     }
-
-    const newUser = new this.userModel(createUserDto);
-    return newUser.save();
-  }
-
-  async findAll(): Promise<UserDocument[]> {
-    return this.userModel.find().exec();
-  }
-
-  async findById(id: string): Promise<UserDocument | null> {
-    const user = await this.userModel.findOne({ _id: id });
-    if (!user) return null;
-    return user;
-  }
-
-  async findByRole(role: string): Promise<UserDocument[] | boolean> {
-    const listLore = await this.userModel.find({ role: role }).exec();
-    console.log(listLore);
-    if (listLore.length === 0) return false;
-
-    return listLore;
-  }
-
-  async update(
-    id: string,
-    updateUserDto: UpdateUserDto,
-  ): Promise<UserDocument | boolean> {
-    updateUserDto.updatedAt = new Date();
-
-    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true });
   }
 
   async delete(id: string): Promise<boolean> {
-    this.userModel.findByIdAndDelete(id).exec();
+    const user = await this.findById(id);
 
+    if (!user) return false;
+
+    await this.userRepository.delete(id);
     return true;
   }
 }
