@@ -1,6 +1,3 @@
-import { UpdateRoomDto } from '../../dtos/updates/update-room.dto';
-import { CreateRoomDto } from './../../dtos/creates/create-room.dto';
-import { RoomService } from './../../services/room.service';
 import {
   Controller,
   Get,
@@ -10,6 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { RoomService } from '../../services';
+import { CreateRoomDto } from '../../dtos/creates';
+import { UpdateRoomDto } from '../../dtos/updates';
 
 @Controller('rooms')
 export class RoomController {

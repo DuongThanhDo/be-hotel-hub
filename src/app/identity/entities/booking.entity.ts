@@ -22,7 +22,7 @@ export class BookingEntity {
   rooms: RoomEntity[];
 
   @OneToMany(() => PaymentEntity, (payment) => payment.booking)
-  payments: PaymentEntity[];
+  payments: string[];
 
   @Column({ type: 'date', default: null })
   check_in: Date;

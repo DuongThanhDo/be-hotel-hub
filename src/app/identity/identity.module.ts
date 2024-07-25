@@ -13,6 +13,7 @@ import { AuthModule } from '../auth/auth.module';
 import {
   BookingController,
   CustomerController,
+  PaymentController,
   ProfileController,
   RoomController,
   StaffController,
@@ -21,6 +22,7 @@ import {
 import {
   BookingService,
   CustomerService,
+  PaymentService,
   ProfileService,
   RoomService,
   StaffService,
@@ -47,6 +49,7 @@ import {
     ProfileController,
     RoomController,
     BookingController,
+    PaymentController,
   ],
   providers: [
     UserService,
@@ -55,6 +58,7 @@ import {
     StaffService,
     RoomService,
     BookingService,
+    PaymentService,
   ],
   exports: [UserService],
 })

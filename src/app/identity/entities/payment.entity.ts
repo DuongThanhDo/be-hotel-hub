@@ -16,9 +16,9 @@ export class PaymentEntity {
   @Column('decimal')
   amount: number;
 
+  @Column({ type: 'enum', enum: StatusPayment, default: StatusPayment.pending })
+  status: StatusPayment;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   payment_date: Date;
-
-  @Column({ type: 'enum', enum: StatusPayment })
-  status: StatusPayment;
 }

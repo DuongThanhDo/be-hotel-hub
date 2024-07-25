@@ -38,6 +38,7 @@ export class BookingService {
         ...body.createBookingDto,
         customer,
         rooms: validRooms,
+        payments: [],
       });
     } catch (error) {
       console.error('Error creating booking:', error);
@@ -47,14 +48,14 @@ export class BookingService {
 
   async findAll(): Promise<BookingEntity[]> {
     return this.bookingRepository.find({
-      relations: ['customer', 'rooms'],
+      relations: ['customer', 'rooms', 'payments'],
     });
   }
 
   async findById(id: string): Promise<BookingEntity> {
     return this.bookingRepository.findOne({
       where: { booking_id: id },
-      relations: ['customer', 'rooms'],
+      relations: ['customer', 'rooms', 'payments'],
     });
   }
 
