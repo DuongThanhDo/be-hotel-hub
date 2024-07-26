@@ -26,6 +26,19 @@ export class RoomService {
     });
   }
 
+  async getNonRepeatRoomType(): Promise<RoomEntity[]> {
+    const rooms = await this.findAll();
+    const seen = new Set();
+
+    return rooms.reduce((acc, room) => {
+      if (!seen.has(room.type)) {
+        seen.add(room.type);
+        acc.push(room);
+      }
+      return acc;
+    }, []);
+  }
+
   async update(
     id: string,
     updateRoomDto: UpdateRoomDto,

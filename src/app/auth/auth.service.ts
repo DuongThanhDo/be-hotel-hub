@@ -20,7 +20,16 @@ export class AuthService {
 
   async register(user: CreateUserDto): Promise<UserEntity | any> {
     try {
-      const { user_name, password, email, role } = user;
+      const {
+        user_name,
+        password,
+        email,
+        role,
+        position,
+        name,
+        phone,
+        address,
+      } = user;
       const existingUser = await this.userService.findByEmail(email);
 
       if (existingUser) return 'Email taken!';
@@ -33,10 +42,10 @@ export class AuthService {
         password: hashPassword,
         role,
         dob: undefined,
-        position: '',
-        name: '',
-        phone: '',
-        address: '',
+        position: position || '',
+        name: name || '',
+        phone: phone || '',
+        address: address || '',
       });
 
       return newUser;

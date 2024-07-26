@@ -20,6 +20,11 @@ export class RoomController {
     return this.roomService.create(createRoomDto);
   }
 
+  @Get('type')
+  getTypeRoom() {
+    return this.roomService.getNonRepeatRoomType();
+  }
+
   @Get()
   findAll() {
     return this.roomService.findAll();

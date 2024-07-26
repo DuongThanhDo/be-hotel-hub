@@ -13,8 +13,6 @@ export class ProfileController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateProfileDto: UpdateProfileDto) {
-    console.log(id);
-
     return this.profileService.update(id, updateProfileDto);
   }
 }

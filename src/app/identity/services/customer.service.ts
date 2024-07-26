@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CustomerEntity, UserEntity } from '../entities';
+import { UserService } from './user.service';
+import { Role } from 'src/common/constants/enum';
 
 @Injectable()
 export class CustomerService {
@@ -11,12 +13,13 @@ export class CustomerService {
 
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    private userService: UserService,
   ) {}
 
-  async findAll(): Promise<CustomerEntity[] | null> {
-    const customers = await this.customerRepository.find({
-      relations: ['user'],
-    });
+  async findAll(): Promise<UserEntity[] | null> {
+    const users = await this.userService.findAll();
+    const customers = users.filter((user) => user.role === Role.customer);
+
     return customers;
   }
 

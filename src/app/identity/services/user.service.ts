@@ -89,9 +89,22 @@ export class UserService {
   }
 
   async delete(id: string): Promise<boolean> {
-    const user = await this.findById(id);
+    const user = await this.userRepository.findOne({
+      where: { user_id: id },
+      relations: ['customer', 'staff', 'profile'],
+    });
 
     if (!user) return false;
+
+    if (user.customer) {
+      await this.customerRepository.delete(user.customer.customer_id);
+    }
+    if (user.staff) {
+      await this.staffRepository.delete(user.staff.staff_id);
+    }
+    if (user.profile) {
+      await this.profileRepository.delete(user.profile.profile_id);
+    }
 
     await this.userRepository.delete(id);
     return true;

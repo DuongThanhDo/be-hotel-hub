@@ -3,6 +3,7 @@ import { ExistingUserDto } from '../../dtos/existing-user.dto';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Role } from 'src/common/constants/enum';
 import { StaffService } from '../../services';
+import { UpdateStaffDto } from '../../dtos/updates/update-staff.dto';
 
 @Controller('staffs')
 export class StaffController {
@@ -27,7 +28,7 @@ export class StaffController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() position: string) {
-    return this.staffService.update(id, position);
+  update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto) {
+    return this.staffService.update(id, updateStaffDto);
   }
 }
