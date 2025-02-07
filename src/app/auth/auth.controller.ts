@@ -1,4 +1,3 @@
-import { Role } from 'src/common/constants/enum';
 import { CreateUserDto } from '../identity/dtos/creates';
 import { ExistingUserDto } from '../identity/dtos/existing-user.dto';
 import { AuthService } from './auth.service';
@@ -16,6 +15,6 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   login(@Body() user: ExistingUserDto) {
-    return this.authService.login(user, Role.admin);
+    return this.authService.login(user);
   }
 }

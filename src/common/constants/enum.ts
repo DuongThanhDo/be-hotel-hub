@@ -5,19 +5,19 @@ export enum Role {
 }
 
 export enum StatusRoom {
-  available = 'available',
-  booked = 'booked',
-  maintenance = 'maintenance',
+  available = 'có sẵn',
+  booked = 'đã đặt',
+  maintenance = 'bảo trì',
 }
 
 export enum StatusBooking {
-  pending = 'pending',
-  confirmed = 'confirmed',
-  cancelled = 'cancelled',
+  pending = 'đang chờ',
+  confirmed = 'đang thuê',
+  cancelled = 'đã hủy',
 }
 
 export enum StatusPayment {
-  pending = 'pending',
-  completed = 'completed',
-  failed = 'failed',
+  pending = 'đang chờ',
+  completed = 'đã hoàn thành',
+  failed = 'thất bại',
 }

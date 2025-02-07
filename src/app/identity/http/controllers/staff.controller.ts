@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { ExistingUserDto } from '../../dtos/existing-user.dto';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Role } from 'src/common/constants/enum';
 import { StaffService } from '../../services';
 import { UpdateStaffDto } from '../../dtos/updates/update-staff.dto';
 
@@ -14,7 +13,7 @@ export class StaffController {
 
   @Post('login')
   login(@Body() existingUserDto: ExistingUserDto) {
-    return this.authService.login(existingUserDto, Role.staff);
+    return this.authService.login(existingUserDto);
   }
 
   @Get()

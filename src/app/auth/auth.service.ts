@@ -4,7 +4,6 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../identity/dtos/creates';
 import { UserEntity } from '../identity/entities';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from 'src/common/constants/enum';
 import { UserService } from '../identity/services';
 
 @Injectable()
@@ -82,16 +81,23 @@ export class AuthService {
 
   async login(
     existingUserDto: ExistingUserDto,
-    role: Role,
   ): Promise<{ token: string } | null | UserEntity | any> {
-    const { email, password } = existingUserDto;
+    const { email, password, web } = existingUserDto;
     const user = await this.validateUser(email, password);
 
-    if (role && role !== user.role) return 'Đăng nhập sai vị trí!';
+    if (
+      (web === 'hms' && user.role === 'customer') ||
+      (web === 'customer' && user.role !== 'customer')
+    )
+      return null;
+
+    if (web !== 'hms' && web !== 'customer') return null;
 
     if (!user) return null;
 
     const jwt = await this.jwtService.signAsync({ user });
-    return { token: jwt };
+    console.log(jwt);
+
+    return user;
   }
 }

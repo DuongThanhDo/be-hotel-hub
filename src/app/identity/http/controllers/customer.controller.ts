@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { CustomerService } from '../../services';
 import { ExistingUserDto } from '../../dtos/existing-user.dto';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Role } from 'src/common/constants/enum';
 
 @Controller('customers')
 export class CustomerController {
@@ -13,7 +12,7 @@ export class CustomerController {
 
   @Post('login')
   login(@Body() existingUserDto: ExistingUserDto) {
-    return this.authService.login(existingUserDto, Role.customer);
+    return this.authService.login(existingUserDto);
   }
 
   @Get()

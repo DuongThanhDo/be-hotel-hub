@@ -1,4 +1,10 @@
-import { forwardRef, Module } from '@nestjs/common';
+import {
+  forwardRef,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   BookingEntity,
@@ -28,6 +34,7 @@ import {
   StaffService,
   UserService,
 } from './services';
+import { AuthMiddle } from './http/middlewares/auth.middle';
 
 @Module({
   imports: [
@@ -62,4 +69,10 @@ import {
   ],
   exports: [UserService],
 })
-export class IdentityModule {}
+export class IdentityModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddle)
+      .forRoutes({ path: 'users', method: RequestMethod.GET });
+  }
+}

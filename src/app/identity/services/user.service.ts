@@ -39,7 +39,10 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<UserEntity> {
-    return this.userRepository.findOne({ where: { email: email } });
+    return this.userRepository.findOne({
+      where: { email: email },
+      relations: ['customer', 'staff', 'profile'],
+    });
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
